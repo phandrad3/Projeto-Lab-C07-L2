@@ -39,8 +39,8 @@ O Outer Wilds é um sistema voltado para o gerenciamento de missões interplanet
 | Chave   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
 | `idMissao` | `INT` | **Chave Primária** |
-| `nome` | `VARCHAR(45)` | Nome da **Missão** |
-| `duracao` | `TIME` | Duração total da **Missão** |
+| `nome` | `VARCHAR(45)` | Nome da **Missao** |
+| `duracao` | `TIME` | Duração total da **Missao** |
 | `status` | `ENUM` | "Planejada", "Em Andamento", "Concluída" |
 | `Piloto_idPiloto` | `INT` | Chave estrangeira de **Piloto** |
 
@@ -48,9 +48,9 @@ O Outer Wilds é um sistema voltado para o gerenciamento de missões interplanet
 
 | Chave   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `Planeta_nomePlaneta` | `VARCHAR(45)` | **Chave Primária** |
-| `Missao_idMissao` | `INT` | **Chave Primária** |
-| `problemas` | `VARCHAR(200)` | Problemas relatados durante a **Missão** |
+| `Planeta_nomePlaneta` | `VARCHAR(45)` | **Chave Primária / Chave estrangeira de Planeta** |
+| `Missao_idMissao` | `INT` | **Chave Primária / Chave estrangeira de Missao** |
+| `problemas` | `VARCHAR(200)` | Problemas relatados durante a **Missao** |
 
 #### Planeta
 
@@ -58,14 +58,14 @@ O Outer Wilds é um sistema voltado para o gerenciamento de missões interplanet
 | :---------- | :--------- | :---------------------------------- |
 | `nomePlaneta` | `VARCHAR(45)` | **Chave Primária** |
 | `tipo` | `ENUM` | "Gasoso", "Aquático", "Rochoso" |
-| `habitavel` | `BINARY` | "True", "False" |
+| `habitavel` | `TINYINT(1)` | 0 = Falso, 1 = Verdadeiro |
 
 #### Planeta_has_Recurso
 
 | Chave   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `Planeta_nomePlaneta` | `VARCHAR(45)` | **Chave Primária** |
-| `Recurso_nomeRecurso` | `VARCHAR(45)` | **Chave Primária** |
+| `Planeta_nomePlaneta` | `VARCHAR(45)` | **Chave Primária / Chave estrangeira de Planeta** |
+| `Recurso_nomeRecurso` | `VARCHAR(45)` | **Chave Primária / Chave estrangeira de Recurso** |
 | `quantidadeRecurso` | `FLOAT` | Quantidades de recursos no **Planeta** |
 
 #### Recurso
