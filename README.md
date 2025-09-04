@@ -8,9 +8,9 @@ O Outer Wilds é um sistema voltado para o gerenciamento de missões interplanet
 
 ## Autores
 
-- [Patrick Augusto Lins de Oliveira Damião](https://github.com/Pack0042)
+- [Patrick Augusto Lins de Oliveira Damião - GES - 496](https://github.com/Pack0042)
 
-- [Pedro Henrique de Paula Andrade](https://github.com/phandrad3)
+- [Pedro Henrique de Paula Andrade - GES - 368](https://github.com/phandrad3)
 
 
 ## Entidades e Relacionamentos
