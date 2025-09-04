@@ -1,4 +1,18 @@
 
+# Outer Wilds
+
+O Outer Wilds é um sistema voltado para o gerenciamento de missões interplanetárias onde pilotos, equipados com suas naves espaciais, partem em missões rumo à diferentes planetas e catalogam qualquer recurso encontrado.
+
+
+
+
+## Autores
+
+- [Patrick Augusto Lins de Oliveira Damião](https://github.com/Pack0042)
+
+- [Pedro Henrique de Paula Andrade](https://github.com/phandrad3)
+
+
 ## Entidades e Relacionamentos
 
 #### Piloto
