@@ -3,17 +3,8 @@ from dao.pilotoDAO import PilotoDAO
 from dao.missaoDAO import MissaoDAO
 from dao.planetaDAO import PlanetaDAO
 from dao.recursoDAO import RecursoDAO
+from dao.consultaDAO import ConsultaDAO  # Importando a nova classe de consulta
 
-import mysql.connector
-
-# Conexão
-conn = mysql.connector.connect(
-    host="127.0.0.1",
-    port=3306,
-    user="root",
-    password="root",
-    database="OuterWilds"
-)
 
 # Instanciando DAOs
 naveDao = NaveDAO()
@@ -21,6 +12,7 @@ piloto_dao = PilotoDAO()
 missaoDAO = MissaoDAO()
 planetaDAO = PlanetaDAO()
 recursoDAO = RecursoDAO()
+consultaDAO = ConsultaDAO()  # Instanciando o DAO de consultas
 
 # Função principal
 def main():
@@ -35,6 +27,7 @@ def menu_principal():
         print("3 - Gerenciar Missões")
         print("4 - Gerenciar Planetas")
         print("5 - Gerenciar Recursos")
+        print("6 - Realizar Consultas")  # Nova opção para consultas
         print("0 - Sair")
         
         try:
@@ -56,8 +49,94 @@ def menu_principal():
             menu_planeta(planetaDAO)
         elif opcao == "5":
             menu_recurso(recursoDAO)
+        elif opcao == "6":  # Nova opção para consultas
+            menu_consultas(consultaDAO)
         elif opcao == "0":
             print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+# Menu de Consultas
+def menu_consultas(dao):
+    while True:
+        print("\n--- MENU DE CONSULTAS ---")
+        print("1 - Consultas sem Tabelas Intermediárias")
+        print("2 - Consultas com Tabelas Intermediárias")
+        print("0 - Voltar")
+        
+        try:
+            opcao = input("Escolha uma opção: ")
+        except EOFError:
+            print("\nErro de entrada. Voltando ao menu principal.")
+            break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada. Voltando ao menu principal.")
+            break
+
+        if opcao == "1":
+            menu_consultas_sem_intermediarias(dao)
+        elif opcao == "2":
+            menu_consultas_com_intermediarias(dao)
+        elif opcao == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+# Menu de Consultas sem Tabelas Intermediárias
+def menu_consultas_sem_intermediarias(dao):
+    while True:
+        print("\n--- CONSULTAS SEM TABELAS INTERMEDIÁRIAS ---")
+        print("1 - Pilotos com suas Naves")
+        print("2 - Missões com seus Pilotos")
+        print("3 - Missões Realizadas")
+        print("0 - Voltar")
+        
+        try:
+            opcao = input("Escolha uma opção: ")
+        except EOFError:
+            print("\nErro de entrada. Voltando ao menu anterior.")
+            break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada. Voltando ao menu anterior.")
+            break
+
+        if opcao == "1":
+            dao.pilotos_com_naves()
+        elif opcao == "2":
+            dao.missoes_com_pilotos()
+        elif opcao == "3":
+            dao.missoes_realizadas()
+        elif opcao == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+# Menu de Consultas com Tabelas Intermediárias
+def menu_consultas_com_intermediarias(dao):
+    while True:
+        print("\n--- CONSULTAS COM TABELAS INTERMEDIÁRIAS ---")
+        print("1 - Missões com Pilotos e Naves")
+        print("2 - Recursos em Planetas Inóspitos")  # Nome ajustado
+        print("3 - Missões, Planetas e Recursos")
+        print("0 - Voltar")
+        
+        try:
+            opcao = input("Escolha uma opção: ")
+        except EOFError:
+            print("\nErro de entrada. Voltando ao menu anterior.")
+            break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada. Voltando ao menu anterior.")
+            break
+
+        if opcao == "1":
+            dao.missao_piloto_nave()
+        elif opcao == "2":
+            dao.recursos_planetas_inospitos()
+        elif opcao == "3":
+            dao.missoes_planetas_recursos()
+        elif opcao == "0":
             break
         else:
             print("Opção inválida!")
