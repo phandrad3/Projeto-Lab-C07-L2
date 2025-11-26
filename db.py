@@ -7,7 +7,7 @@ def get_connection():
             host='127.0.0.1:3306',
             user='root',
             password='root',
-            database='Proejeto BD'
+            database='OuterWilds'
         )
         return conn
     except Error as e:

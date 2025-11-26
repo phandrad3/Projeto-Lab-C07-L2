@@ -1,11 +1,11 @@
-from connectionDAO import get_connection, close_connection
+from .connectionDAO import get_connection, close_connection
 from mysql.connector import Error
 
 class PilotoDAO:
     def __init__(self):
         pass
     
-    def insert(self, nome, nivel, Nave_idNave):
+    def inserir(self, nome, nivel, Nave_idNave):
         """Insere um novo piloto na tabela 'Piloto'."""
         conn = get_connection()
         if conn is None:
@@ -27,33 +27,7 @@ class PilotoDAO:
         finally:
             close_connection(conn, cursor)
     
-    def delete(self, idPiloto):
-        """Deleta um piloto específico pelo ID."""
-        conn = get_connection()
-        if conn is None:
-            return False
-
-        cursor = conn.cursor()
-        query = "DELETE FROM Piloto WHERE idPiloto = %s"
-        data = (idPiloto,)
-
-        try:
-            cursor.execute(query, data)
-            conn.commit()
-            if cursor.rowcount > 0:
-                print(f"\n[DELETE] Piloto ID {idPiloto} deletado com sucesso.")
-                return True
-            else:
-                print(f"\n[DELETE] Nenhum piloto encontrado com ID {idPiloto} para deletar.")
-                return False
-        except Error as e:
-            print(f"\n[DELETE] Erro ao deletar piloto: {e}")
-            conn.rollback()
-            return False
-        finally:
-            close_connection(conn, cursor)
-    
-    def update(self, idPiloto, nome=None, nivel=None, Nave_idNave=None):
+    def atualizar(self, idPiloto, nome=None, nivel=None, Nave_idNave=None):
         """Atualiza dados de um piloto específico pelo ID."""
         conn = get_connection()
         if conn is None:
@@ -97,44 +71,54 @@ class PilotoDAO:
         finally:
             close_connection(conn, cursor)
     
-    def select(self, idPiloto=None):
-        """Seleciona pilotos do banco de dados."""
+    def deletar(self, idPiloto):
+        """Deleta um piloto específico pelo ID."""
+        conn = get_connection()
+        if conn is None:
+            return False
+
+        cursor = conn.cursor()
+        query = "DELETE FROM Piloto WHERE idPiloto = %s"
+        data = (idPiloto,)
+
+        try:
+            cursor.execute(query, data)
+            conn.commit()
+            if cursor.rowcount > 0:
+                print(f"\n[DELETE] Piloto ID {idPiloto} deletado com sucesso.")
+                return True
+            else:
+                print(f"\n[DELETE] Nenhum piloto encontrado com ID {idPiloto} para deletar.")
+                return False
+        except Error as e:
+            print(f"\n[DELETE] Erro ao deletar piloto: {e}")
+            conn.rollback()
+            return False
+        finally:
+            close_connection(conn, cursor)
+    
+    def listar(self):
+        """Lista todos os pilotos do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
 
         cursor = conn.cursor()
-        
-        if idPiloto:
-            query = "SELECT idPiloto, nome, nivel, Nave_idNave FROM Piloto WHERE idPiloto = %s"
-            data = (idPiloto,)
-        else:
-            query = "SELECT idPiloto, nome, nivel, Nave_idNave FROM Piloto"
-            data = None
+        query = "SELECT idPiloto, nome, nivel, Nave_idNave FROM Piloto"
 
         try:
-            if data:
-                cursor.execute(query, data)
-                record = cursor.fetchone()
-                if record:
-                    print(f"\n[SELECT] Piloto encontrado: ID: {record[0]}, Nome: {record[1]}, Nível: {record[2]}, Nave: {record[3]}")
-                    return record
-                else:
-                    print(f"\n[SELECT] Piloto com ID {idPiloto} não encontrado.")
-                    return None
+            cursor.execute(query)
+            records = cursor.fetchall()
+            print("\n[SELECT] Todos os Pilotos:")
+            if records:
+                for row in records:
+                    print(f"   ID: {row[0]}, Nome: {row[1]}, Nível: {row[2]}, Nave: {row[3]}")
+                return records
             else:
-                cursor.execute(query)
-                records = cursor.fetchall()
-                print("\n[SELECT] Todos os Pilotos:")
-                if records:
-                    for row in records:
-                        print(f"   ID: {row[0]}, Nome: {row[1]}, Nível: {row[2]}, Nave: {row[3]}")
-                    return records
-                else:
-                    print("   Nenhum piloto encontrado.")
-                    return []
+                print("   Nenhum piloto encontrado.")
+                return []
         except Error as e:
-            print(f"\n[SELECT] Erro ao selecionar pilotos: {e}")
+            print(f"\n[SELECT] Erro ao listar pilotos: {e}")
             return []
         finally:
             close_connection(conn, cursor)
@@ -144,20 +128,17 @@ if __name__ == '__main__':
     dao = PilotoDAO()
     
     # INSERT
-    dao.insert("Teste Piloto", 5, 1)
+    dao.inserir("Piloto Teste", 5, 1)
     
     # SELECT ALL
-    pilotos = dao.select()
+    pilotos = dao.listar()
     
     if pilotos:
         # UPDATE
-        dao.update(pilotos[0][0], nivel=10)
-        
-        # SELECT BY ID
-        dao.select(pilotos[0][0])
+        dao.atualizar(pilotos[0][0], nivel=10)
         
         # DELETE
-        dao.delete(pilotos[0][0])
+        dao.deletar(pilotos[0][0])
     
     # SELECT ALL FINAL
-    dao.select()
+    dao.listar()

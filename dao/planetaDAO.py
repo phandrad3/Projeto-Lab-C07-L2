@@ -1,11 +1,11 @@
-from connectionDAO import get_connection, close_connection
+from .connectionDAO import get_connection, close_connection
 from mysql.connector import Error
 
 class PlanetaDAO:
     def __init__(self):
         pass
     
-    def insert(self, nomePlaneta, tipo, habitavel):
+    def inserir(self, nomePlaneta, tipo, habitavel):
         """Insere um novo planeta na tabela 'Planeta'."""
         conn = get_connection()
         if conn is None:
@@ -27,33 +27,7 @@ class PlanetaDAO:
         finally:
             close_connection(conn, cursor)
     
-    def delete(self, nomePlaneta):
-        """Deleta um planeta específico pelo nome."""
-        conn = get_connection()
-        if conn is None:
-            return False
-
-        cursor = conn.cursor()
-        query = "DELETE FROM Planeta WHERE nomePlaneta = %s"
-        data = (nomePlaneta,)
-
-        try:
-            cursor.execute(query, data)
-            conn.commit()
-            if cursor.rowcount > 0:
-                print(f"\n[DELETE] Planeta {nomePlaneta} deletado com sucesso.")
-                return True
-            else:
-                print(f"\n[DELETE] Planeta {nomePlaneta} não encontrado para deletar.")
-                return False
-        except Error as e:
-            print(f"\n[DELETE] Erro ao deletar planeta: {e}")
-            conn.rollback()
-            return False
-        finally:
-            close_connection(conn, cursor)
-    
-    def update(self, nomePlaneta, tipo=None, habitavel=None):
+    def atualizar(self, nomePlaneta, tipo=None, habitavel=None):
         """Atualiza dados de um planeta específico pelo nome."""
         conn = get_connection()
         if conn is None:
@@ -94,44 +68,54 @@ class PlanetaDAO:
         finally:
             close_connection(conn, cursor)
     
-    def select(self, nomePlaneta=None):
-        """Seleciona planetas do banco de dados."""
+    def deletar(self, nomePlaneta):
+        """Deleta um planeta específico pelo nome."""
+        conn = get_connection()
+        if conn is None:
+            return False
+
+        cursor = conn.cursor()
+        query = "DELETE FROM Planeta WHERE nomePlaneta = %s"
+        data = (nomePlaneta,)
+
+        try:
+            cursor.execute(query, data)
+            conn.commit()
+            if cursor.rowcount > 0:
+                print(f"\n[DELETE] Planeta {nomePlaneta} deletado com sucesso.")
+                return True
+            else:
+                print(f"\n[DELETE] Planeta {nomePlaneta} não encontrado para deletar.")
+                return False
+        except Error as e:
+            print(f"\n[DELETE] Erro ao deletar planeta: {e}")
+            conn.rollback()
+            return False
+        finally:
+            close_connection(conn, cursor)
+    
+    def listar(self):
+        """Lista todos os planetas do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
 
         cursor = conn.cursor()
-        
-        if nomePlaneta:
-            query = "SELECT nomePlaneta, tipo, habitavel FROM Planeta WHERE nomePlaneta = %s"
-            data = (nomePlaneta,)
-        else:
-            query = "SELECT nomePlaneta, tipo, habitavel FROM Planeta"
-            data = None
+        query = "SELECT nomePlaneta, tipo, habitavel FROM Planeta"
 
         try:
-            if data:
-                cursor.execute(query, data)
-                record = cursor.fetchone()
-                if record:
-                    print(f"\n[SELECT] Planeta encontrado: Nome: {record[0]}, Tipo: {record[1]}, Habitável: {'Sim' if record[2] else 'Não'}")
-                    return record
-                else:
-                    print(f"\n[SELECT] Planeta {nomePlaneta} não encontrado.")
-                    return None
+            cursor.execute(query)
+            records = cursor.fetchall()
+            print("\n[SELECT] Todos os Planetas:")
+            if records:
+                for row in records:
+                    print(f"   Nome: {row[0]}, Tipo: {row[1]}, Habitável: {'Sim' if row[2] else 'Não'}")
+                return records
             else:
-                cursor.execute(query)
-                records = cursor.fetchall()
-                print("\n[SELECT] Todos os Planetas:")
-                if records:
-                    for row in records:
-                        print(f"   Nome: {row[0]}, Tipo: {row[1]}, Habitável: {'Sim' if row[2] else 'Não'}")
-                    return records
-                else:
-                    print("   Nenhum planeta encontrado.")
-                    return []
+                print("   Nenhum planeta encontrado.")
+                return []
         except Error as e:
-            print(f"\n[SELECT] Erro ao selecionar planetas: {e}")
+            print(f"\n[SELECT] Erro ao listar planetas: {e}")
             return []
         finally:
             close_connection(conn, cursor)
@@ -141,20 +125,17 @@ if __name__ == '__main__':
     dao = PlanetaDAO()
     
     # INSERT
-    dao.insert("Teste Planeta", "Rochoso", 1)
+    dao.inserir("Planeta Teste", "Rochoso", 1)
     
     # SELECT ALL
-    planetas = dao.select()
+    planetas = dao.listar()
     
     if planetas:
         # UPDATE
-        dao.update(planetas[0][0], habitavel=0)
-        
-        # SELECT BY NAME
-        dao.select(planetas[0][0])
+        dao.atualizar(planetas[0][0], habitavel=0)
         
         # DELETE
-        dao.delete(planetas[0][0])
+        dao.deletar(planetas[0][0])
     
     # SELECT ALL FINAL
-    dao.select()
+    dao.listar()

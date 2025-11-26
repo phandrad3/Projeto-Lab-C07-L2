@@ -1,11 +1,11 @@
-from connectionDAO import get_connection, close_connection
+from .connectionDAO import get_connection, close_connection
 from mysql.connector import Error
 
 class NaveDAO:
     def __init__(self):
         pass
     
-    def insert(self, nome, capacidade, velocidadeMaxima):
+    def inserir(self, nome, capacidade, velocidadeMaxima):
         """Insere uma nova nave na tabela 'Nave'."""
         conn = get_connection()
         if conn is None:
@@ -27,33 +27,7 @@ class NaveDAO:
         finally:
             close_connection(conn, cursor)
     
-    def delete(self, idNave):
-        """Deleta uma nave específica pelo ID."""
-        conn = get_connection()
-        if conn is None:
-            return False
-
-        cursor = conn.cursor()
-        query = "DELETE FROM Nave WHERE idNave = %s"
-        data = (idNave,)
-
-        try:
-            cursor.execute(query, data)
-            conn.commit()
-            if cursor.rowcount > 0:
-                print(f"\n[DELETE] Nave ID {idNave} deletada com sucesso.")
-                return True
-            else:
-                print(f"\n[DELETE] Nenhuma nave encontrada com ID {idNave} para deletar.")
-                return False
-        except Error as e:
-            print(f"\n[DELETE] Erro ao deletar nave: {e}")
-            conn.rollback()
-            return False
-        finally:
-            close_connection(conn, cursor)
-    
-    def update(self, idNave, nome=None, capacidade=None, velocidadeMaxima=None):
+    def atualizar(self, idNave, nome=None, capacidade=None, velocidadeMaxima=None):
         """Atualiza dados de uma nave específica pelo ID."""
         conn = get_connection()
         if conn is None:
@@ -97,44 +71,54 @@ class NaveDAO:
         finally:
             close_connection(conn, cursor)
     
-    def select(self, idNave=None):
-        """Seleciona naves do banco de dados."""
+    def deletar(self, idNave):
+        """Deleta uma nave específica pelo ID."""
+        conn = get_connection()
+        if conn is None:
+            return False
+
+        cursor = conn.cursor()
+        query = "DELETE FROM Nave WHERE idNave = %s"
+        data = (idNave,)
+
+        try:
+            cursor.execute(query, data)
+            conn.commit()
+            if cursor.rowcount > 0:
+                print(f"\n[DELETE] Nave ID {idNave} deletada com sucesso.")
+                return True
+            else:
+                print(f"\n[DELETE] Nenhuma nave encontrada com ID {idNave} para deletar.")
+                return False
+        except Error as e:
+            print(f"\n[DELETE] Erro ao deletar nave: {e}")
+            conn.rollback()
+            return False
+        finally:
+            close_connection(conn, cursor)
+    
+    def listar(self):
+        """Lista todas as naves do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
 
         cursor = conn.cursor()
-        
-        if idNave:
-            query = "SELECT idNave, nome, capacidade, velocidadeMaxima FROM Nave WHERE idNave = %s"
-            data = (idNave,)
-        else:
-            query = "SELECT idNave, nome, capacidade, velocidadeMaxima FROM Nave"
-            data = None
+        query = "SELECT idNave, nome, capacidade, velocidadeMaxima FROM Nave"
 
         try:
-            if data:
-                cursor.execute(query, data)
-                record = cursor.fetchone()
-                if record:
-                    print(f"\n[SELECT] Nave encontrada: ID: {record[0]}, Nome: {record[1]}, Capacidade: {record[2]}, Velocidade: {record[3]}")
-                    return record
-                else:
-                    print(f"\n[SELECT] Nave com ID {idNave} não encontrada.")
-                    return None
+            cursor.execute(query)
+            records = cursor.fetchall()
+            print("\n[SELECT] Todas as Naves:")
+            if records:
+                for row in records:
+                    print(f"   ID: {row[0]}, Nome: {row[1]}, Capacidade: {row[2]}, Velocidade: {row[3]}")
+                return records
             else:
-                cursor.execute(query)
-                records = cursor.fetchall()
-                print("\n[SELECT] Todas as Naves:")
-                if records:
-                    for row in records:
-                        print(f"   ID: {row[0]}, Nome: {row[1]}, Capacidade: {row[2]}, Velocidade: {row[3]}")
-                    return records
-                else:
-                    print("   Nenhuma nave encontrada.")
-                    return []
+                print("   Nenhuma nave encontrada.")
+                return []
         except Error as e:
-            print(f"\n[SELECT] Erro ao selecionar naves: {e}")
+            print(f"\n[SELECT] Erro ao listar naves: {e}")
             return []
         finally:
             close_connection(conn, cursor)
@@ -144,20 +128,17 @@ if __name__ == '__main__':
     dao = NaveDAO()
     
     # INSERT
-    dao.insert("Teste Nave", 100.0, 5000.0)
+    dao.inserir("Nave Teste", 100.0, 5000.0)
     
     # SELECT ALL
-    naves = dao.select()
+    naves = dao.listar()
     
     if naves:
         # UPDATE
-        dao.update(naves[0][0], capacidade=150.0)
-        
-        # SELECT BY ID
-        dao.select(naves[0][0])
+        dao.atualizar(naves[0][0], capacidade=150.0)
         
         # DELETE
-        dao.delete(naves[0][0])
+        dao.deletar(naves[0][0])
     
     # SELECT ALL FINAL
-    dao.select()
+    dao.listar()
