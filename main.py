@@ -92,14 +92,19 @@ def menu_missao_realizada(dao):
             dao.inserir(planeta, id_missao, problemas)
 
         elif opcao == "2":
-            planeta = input("Nome do Planeta: ")
-            try:
-                id_missao = int(input("ID da Missão: "))
-            except ValueError:
-                print("ID da Missão inválido! Deve ser um número inteiro.")
-                continue
-            problemas = input("Nova descrição dos problemas (opcional): ") or None
-            dao.atualizar(planeta, id_missao, problemas)
+            print("\n--- Missões Realizadas Registradas ---")
+            missoes = dao.listar()
+            if missoes:
+                planeta = input("Nome do Planeta: ")
+                try:
+                    id_missao = int(input("ID da Missão: "))
+                except ValueError:
+                    print("ID da Missão inválido! Deve ser um número inteiro.")
+                    continue
+                problemas = input("Nova descrição dos problemas (opcional): ") or None
+                dao.atualizar(planeta, id_missao, problemas)
+            else:
+                print("Nenhuma missão realizada registrada para atualizar.")
 
         elif opcao == "3":
             print("\n--- Missões Realizadas Registradas ---")
@@ -157,19 +162,24 @@ def menu_planeta_has_recurso(dao):
             dao.inserir(planeta, recurso, quantidade)
 
         elif opcao == "2":
-            planeta = input("Nome do Planeta: ")
-            recurso = input("Nome do Recurso: ")
-            quantidade_input = input("Nova Quantidade (opcional): ") or None
-            
-            quantidade = None
-            if quantidade_input is not None:
-                try:
-                    quantidade = float(quantidade_input)
-                except ValueError:
-                    print("Quantidade inválida! Deve ser um número.")
-                    continue
-            
-            dao.atualizar(planeta, recurso, quantidade)
+            print("\n--- Recursos em Planetas Registrados ---")
+            recursos = dao.listar()
+            if recursos:
+                planeta = input("Nome do Planeta: ")
+                recurso = input("Nome do Recurso: ")
+                quantidade_input = input("Nova Quantidade (opcional): ") or None
+                
+                quantidade = None
+                if quantidade_input is not None:
+                    try:
+                        quantidade = float(quantidade_input)
+                    except ValueError:
+                        print("Quantidade inválida! Deve ser um número.")
+                        continue
+                
+                dao.atualizar(planeta, recurso, quantidade)
+            else:
+                print("Nenhum recurso em planeta registrado para atualizar.")
 
         elif opcao == "3":
             print("\n--- Recursos em Planetas Registrados ---")
@@ -303,33 +313,38 @@ def menu_nave(dao):
             dao.inserir(nome, capacidade, velocidade)
 
         elif opcao == "2":
-            try:
-                id_nave = int(input("ID da Nave: "))
-            except ValueError:
-                print("ID inválido! Deve ser um número inteiro.")
-                continue
+            print("\n--- Naves Registradas ---")
+            naves = dao.listar()
+            if naves:
+                try:
+                    id_nave = int(input("ID da Nave que deseja atualizar: "))
+                except ValueError:
+                    print("ID inválido! Deve ser um número inteiro.")
+                    continue
 
-            nome = input("Novo Nome (vazio para não alterar): ") or None
-            capacidade_input = input("Nova Capacidade (vazio para não alterar): ") or None
-            velocidade_input = input("Nova Velocidade (vazio para não alterar): ") or None
-            
-            capacidade = None
-            if capacidade_input is not None:
-                try:
-                    capacidade = float(capacidade_input)
-                except ValueError:
-                    print("Capacidade inválida! Deve ser um número.")
-                    continue
-            
-            velocidade = None
-            if velocidade_input is not None:
-                try:
-                    velocidade = float(velocidade_input)
-                except ValueError:
-                    print("Velocidade inválida! Deve ser um número.")
-                    continue
-            
-            dao.atualizar(id_nave, nome, capacidade, velocidade)
+                nome = input("Novo Nome (vazio para não alterar): ") or None
+                capacidade_input = input("Nova Capacidade (vazio para não alterar): ") or None
+                velocidade_input = input("Nova Velocidade (vazio para não alterar): ") or None
+                
+                capacidade = None
+                if capacidade_input is not None:
+                    try:
+                        capacidade = float(capacidade_input)
+                    except ValueError:
+                        print("Capacidade inválida! Deve ser um número.")
+                        continue
+                
+                velocidade = None
+                if velocidade_input is not None:
+                    try:
+                        velocidade = float(velocidade_input)
+                    except ValueError:
+                        print("Velocidade inválida! Deve ser um número.")
+                        continue
+                
+                dao.atualizar(id_nave, nome, capacidade, velocidade)
+            else:
+                print("Nenhuma nave registrada para atualizar.")
 
         elif opcao == "3":
             print("\n--- Naves Registradas ---")
@@ -385,33 +400,38 @@ def menu_piloto(dao):
             dao.inserir(nome, nivel, id_nave)
 
         elif opcao == "2":
-            try:
-                id_piloto = int(input("ID do Piloto: "))
-            except ValueError:
-                print("ID inválido! Deve ser um número inteiro.")
-                continue
+            print("\n--- Pilotos Registrados ---")
+            pilotos = dao.listar()
+            if pilotos:
+                try:
+                    id_piloto = int(input("ID do Piloto que deseja atualizar: "))
+                except ValueError:
+                    print("ID inválido! Deve ser um número inteiro.")
+                    continue
 
-            nome = input("Novo Nome (vazio para não alterar): ") or None
-            nivel_input = input("Novo Nível (vazio para não alterar): ") or None
-            id_nave_input = input("Novo ID da Nave (vazio para não alterar): ") or None
-            
-            nivel = None
-            if nivel_input is not None:
-                try:
-                    nivel = int(nivel_input)
-                except ValueError:
-                    print("Nível inválido! Deve ser um número inteiro.")
-                    continue
-            
-            id_nave = None
-            if id_nave_input is not None:
-                try:
-                    id_nave = int(id_nave_input)
-                except ValueError:
-                    print("ID da Nave inválido! Deve ser um número inteiro.")
-                    continue
-            
-            dao.atualizar(id_piloto, nome, nivel, id_nave)
+                nome = input("Novo Nome (vazio para não alterar): ") or None
+                nivel_input = input("Novo Nível (vazio para não alterar): ") or None
+                id_nave_input = input("Novo ID da Nave (vazio para não alterar): ") or None
+                
+                nivel = None
+                if nivel_input is not None:
+                    try:
+                        nivel = int(nivel_input)
+                    except ValueError:
+                        print("Nível inválido! Deve ser um número inteiro.")
+                        continue
+                
+                id_nave = None
+                if id_nave_input is not None:
+                    try:
+                        id_nave = int(id_nave_input)
+                    except ValueError:
+                        print("ID da Nave inválido! Deve ser um número inteiro.")
+                        continue
+                
+                dao.atualizar(id_piloto, nome, nivel, id_nave)
+            else:
+                print("Nenhum piloto registrado para atualizar.")
 
         elif opcao == "3":
             print("\n--- Pilotos Registrados ---")
@@ -464,26 +484,31 @@ def menu_missao(dao):
             dao.inserir(nome, duracao, status, id_piloto)
 
         elif opcao == "2":
-            try:
-                id_missao = int(input("ID da Missão: "))
-            except ValueError:
-                print("ID inválido! Deve ser um número inteiro.")
-                continue
-
-            nome = input("Novo Nome (vazio para não alterar): ") or None
-            duracao = input("Nova Duração (vazio para não alterar): ") or None
-            status = input("Novo Status (vazio para não alterar): ") or None
-            id_piloto_input = input("Novo ID do Piloto (vazio para não alterar): ") or None
-            
-            id_piloto = None
-            if id_piloto_input is not None:
+            print("\n--- Missões Registradas ---")
+            missoes = dao.listar()
+            if missoes:
                 try:
-                    id_piloto = int(id_piloto_input)
+                    id_missao = int(input("ID da Missão que deseja atualizar: "))
                 except ValueError:
-                    print("ID do Piloto inválido! Deve ser um número inteiro.")
+                    print("ID inválido! Deve ser um número inteiro.")
                     continue
-            
-            dao.atualizar(id_missao, nome, duracao, status, id_piloto)
+
+                nome = input("Novo Nome (vazio para não alterar): ") or None
+                duracao = input("Nova Duração (vazio para não alterar): ") or None
+                status = input("Novo Status (vazio para não alterar): ") or None
+                id_piloto_input = input("Novo ID do Piloto (vazio para não alterar): ") or None
+                
+                id_piloto = None
+                if id_piloto_input is not None:
+                    try:
+                        id_piloto = int(id_piloto_input)
+                    except ValueError:
+                        print("ID do Piloto inválido! Deve ser um número inteiro.")
+                        continue
+                
+                dao.atualizar(id_missao, nome, duracao, status, id_piloto)
+            else:
+                print("Nenhuma missão registrada para atualizar.")
 
         elif opcao == "3":
             print("\n--- Missões Registradas ---")
@@ -538,22 +563,27 @@ def menu_planeta(dao):
             dao.inserir(nome, tipo, habitavel)
 
         elif opcao == "2":
-            nome_planeta = input("Nome do Planeta: ")
-            tipo = input("Novo Tipo (vazio para não alterar): ") or None
-            habitavel_input = input("É habitável? (1 para Sim, 0 para Não, vazio para não alterar): ") or None
-            
-            habitavel = None
-            if habitavel_input is not None:
-                try:
-                    habitavel = int(habitavel_input)
-                    if habitavel not in [0, 1]:
+            print("\n--- Planetas Registrados ---")
+            planetas = dao.listar()
+            if planetas:
+                nome_planeta = input("Nome do Planeta que deseja atualizar: ")
+                tipo = input("Novo Tipo (vazio para não alterar): ") or None
+                habitavel_input = input("É habitável? (1 para Sim, 0 para Não, vazio para não alterar): ") or None
+                
+                habitavel = None
+                if habitavel_input is not None:
+                    try:
+                        habitavel = int(habitavel_input)
+                        if habitavel not in [0, 1]:
+                            print("Valor inválido! Deve ser 0 ou 1.")
+                            continue
+                    except ValueError:
                         print("Valor inválido! Deve ser 0 ou 1.")
                         continue
-                except ValueError:
-                    print("Valor inválido! Deve ser 0 ou 1.")
-                    continue
-            
-            dao.atualizar(nome_planeta, tipo, habitavel)
+                
+                dao.atualizar(nome_planeta, tipo, habitavel)
+            else:
+                print("Nenhum planeta registrado para atualizar.")
 
         elif opcao == "3":
             print("\n--- Planetas Registrados ---")
@@ -601,19 +631,24 @@ def menu_recurso(dao):
             dao.inserir(nome, tipo, valor)
 
         elif opcao == "2":
-            nome_recurso = input("Nome do Recurso: ")
-            tipo = input("Novo Tipo (vazio para não alterar): ") or None
-            valor_input = input("Novo Valor Unitário (vazio para não alterar): ") or None
-            
-            valor = None
-            if valor_input is not None:
-                try:
-                    valor = float(valor_input)
-                except ValueError:
-                    print("Valor inválido! Deve ser um número.")
-                    continue
-            
-            dao.atualizar(nome_recurso, tipo, valor)
+            print("\n--- Recursos Registrados ---")
+            recursos = dao.listar()
+            if recursos:
+                nome_recurso = input("Nome do Recurso que deseja atualizar: ")
+                tipo = input("Novo Tipo (vazio para não alterar): ") or None
+                valor_input = input("Novo Valor Unitário (vazio para não alterar): ") or None
+                
+                valor = None
+                if valor_input is not None:
+                    try:
+                        valor = float(valor_input)
+                    except ValueError:
+                        print("Valor inválido! Deve ser um número.")
+                        continue
+                
+                dao.atualizar(nome_recurso, tipo, valor)
+            else:
+                print("Nenhum recurso registrado para atualizar.")
 
         elif opcao == "3":
             print("\n--- Recursos Registrados ---")
