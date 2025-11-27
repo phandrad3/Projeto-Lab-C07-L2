@@ -6,7 +6,6 @@ class RecursoDAO:
         pass
     
     def inserir(self, nomeRecurso, tipo, valorUnitario):
-        """Insere um novo recurso na tabela 'Recurso'."""
         conn = get_connection()
         if conn is None:
             return False
@@ -28,7 +27,6 @@ class RecursoDAO:
             close_connection(conn, cursor)
     
     def atualizar(self, nomeRecurso, tipo=None, valorUnitario=None):
-        """Atualiza dados de um recurso específico pelo nome."""
         conn = get_connection()
         if conn is None:
             return False
@@ -69,7 +67,6 @@ class RecursoDAO:
             close_connection(conn, cursor)
     
     def deletar(self, nomeRecurso):
-        """Deleta um recurso específico pelo nome."""
         conn = get_connection()
         if conn is None:
             return False
@@ -95,7 +92,6 @@ class RecursoDAO:
             close_connection(conn, cursor)
     
     def listar(self):
-        """Lista todos os recursos do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
@@ -119,23 +115,3 @@ class RecursoDAO:
             return []
         finally:
             close_connection(conn, cursor)
-
-if __name__ == '__main__':
-    # Teste da classe
-    dao = RecursoDAO()
-    
-    # INSERT
-    dao.inserir("Recurso Teste", "Minério", 100.0)
-    
-    # SELECT ALL
-    recursos = dao.listar()
-    
-    if recursos:
-        # UPDATE
-        dao.atualizar(recursos[0][0], valorUnitario=150.0)
-        
-        # DELETE
-        dao.deletar(recursos[0][0])
-    
-    # SELECT ALL FINAL
-    dao.listar()

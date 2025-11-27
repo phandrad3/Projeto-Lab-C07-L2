@@ -6,7 +6,6 @@ class MissaoDAO:
         pass
     
     def inserir(self, nome, duracao, status, Piloto_idPiloto):
-        """Insere uma nova missão na tabela 'Missao'."""
         conn = get_connection()
         if conn is None:
             return False
@@ -28,7 +27,6 @@ class MissaoDAO:
             close_connection(conn, cursor)
     
     def atualizar(self, idMissao, nome=None, duracao=None, status=None, Piloto_idPiloto=None):
-        """Atualiza dados de uma missão específica pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -75,7 +73,6 @@ class MissaoDAO:
             close_connection(conn, cursor)
     
     def deletar(self, idMissao):
-        """Deleta uma missão específica pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -126,22 +123,3 @@ class MissaoDAO:
         finally:
             close_connection(conn, cursor)
 
-if __name__ == '__main__':
-    # Teste da classe
-    dao = MissaoDAO()
-    
-    # INSERT
-    dao.inserir("Missão Teste", "02:30:00", "Planejada", 1)
-    
-    # SELECT ALL
-    missoes = dao.listar()
-    
-    if missoes:
-        # UPDATE
-        dao.atualizar(missoes[0][0], status="Em Andamento")
-        
-        # DELETE
-        dao.deletar(missoes[0][0])
-    
-    # SELECT ALL FINAL
-    dao.listar()

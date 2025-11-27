@@ -3,22 +3,22 @@ from dao.pilotoDAO import PilotoDAO
 from dao.missaoDAO import MissaoDAO
 from dao.planetaDAO import PlanetaDAO
 from dao.recursoDAO import RecursoDAO
-from dao.consultaDAO import ConsultaDAO  # Importando a nova classe de consulta
+from dao.consultaDAO import ConsultaDAO
+from dao.missaoRealizadaDAO import MissaoRealizadaDAO
+from dao.planetaHasRecursoDAO import PlanetaHasRecursoDAO
 
-
-# Instanciando DAOs
 naveDao = NaveDAO()
 piloto_dao = PilotoDAO()
 missaoDAO = MissaoDAO()
 planetaDAO = PlanetaDAO()
 recursoDAO = RecursoDAO()
-consultaDAO = ConsultaDAO()  # Instanciando o DAO de consultas
+consultaDAO = ConsultaDAO()
+missaoRealizadaDAO = MissaoRealizadaDAO()
+planetaHasRecursoDAO = PlanetaHasRecursoDAO()
 
-# Função principal
 def main():
     menu_principal()
 
-# Menu principal
 def menu_principal():
     while True:
         print("\n--- MENU PRINCIPAL ---")
@@ -27,7 +27,9 @@ def menu_principal():
         print("3 - Gerenciar Missões")
         print("4 - Gerenciar Planetas")
         print("5 - Gerenciar Recursos")
-        print("6 - Realizar Consultas")  # Nova opção para consultas
+        print("6 - Gerenciar Missões Realizadas") 
+        print("7 - Gerenciar Recursos em Planetas") 
+        print("8 - Realizar Consultas") 
         print("0 - Sair")
         
         try:
@@ -49,7 +51,11 @@ def menu_principal():
             menu_planeta(planetaDAO)
         elif opcao == "5":
             menu_recurso(recursoDAO)
-        elif opcao == "6":  # Nova opção para consultas
+        elif opcao == "6": 
+            menu_missao_realizada(missaoRealizadaDAO)
+        elif opcao == "7":  
+            menu_planeta_has_recurso(planetaHasRecursoDAO)
+        elif opcao == "8":
             menu_consultas(consultaDAO)
         elif opcao == "0":
             print("Saindo...")
@@ -57,7 +63,132 @@ def menu_principal():
         else:
             print("Opção inválida!")
 
-# Menu de Consultas
+def menu_missao_realizada(dao):
+    while True:
+        print("\n--- Menu Missão Realizada ---")
+        print("1 - Inserir Missão Realizada")
+        print("2 - Atualizar Missão Realizada")
+        print("3 - Deletar Missão Realizada")
+        print("4 - Listar Missões Realizadas")
+        print("0 - Voltar")
+        
+        try:
+            opcao = input("Escolha uma opção: ")
+        except EOFError:
+            print("\nErro de entrada. Voltando ao menu principal.")
+            break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada. Voltando ao menu principal.")
+            break
+
+        if opcao == "1":
+            planeta = input("Nome do Planeta: ")
+            try:
+                id_missao = int(input("ID da Missão: "))
+            except ValueError:
+                print("ID da Missão inválido! Deve ser um número inteiro.")
+                continue
+            problemas = input("Descrição dos problemas (opcional): ") or None
+            dao.inserir(planeta, id_missao, problemas)
+
+        elif opcao == "2":
+            planeta = input("Nome do Planeta: ")
+            try:
+                id_missao = int(input("ID da Missão: "))
+            except ValueError:
+                print("ID da Missão inválido! Deve ser um número inteiro.")
+                continue
+            problemas = input("Nova descrição dos problemas (opcional): ") or None
+            dao.atualizar(planeta, id_missao, problemas)
+
+        elif opcao == "3":
+            print("\n--- Missões Realizadas Registradas ---")
+            missoes = dao.listar()
+            if missoes:
+                planeta = input("Nome do Planeta: ")
+                try:
+                    id_missao = int(input("ID da Missão: "))
+                except ValueError:
+                    print("ID da Missão inválido! Deve ser um número inteiro.")
+                    continue
+                dao.deletar(planeta, id_missao)
+            else:
+                print("Nenhuma missão realizada registrada para deletar.")
+
+        elif opcao == "4":
+            dao.listar()
+
+        elif opcao == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+def menu_planeta_has_recurso(dao):
+    while True:
+        print("\n--- Menu Recursos em Planetas ---")
+        print("1 - Inserir Recurso em Planeta")
+        print("2 - Atualizar Recurso em Planeta")
+        print("3 - Deletar Recurso em Planeta")
+        print("4 - Listar Recursos em Planetas")
+        print("0 - Voltar")
+        
+        try:
+            opcao = input("Escolha uma opção: ")
+        except EOFError:
+            print("\nErro de entrada. Voltando ao menu principal.")
+            break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada. Voltando ao menu principal.")
+            break
+
+        if opcao == "1":
+            planeta = input("Nome do Planeta: ")
+            recurso = input("Nome do Recurso: ")
+            quantidade_input = input("Quantidade (opcional): ") or None
+            
+            quantidade = None
+            if quantidade_input is not None:
+                try:
+                    quantidade = float(quantidade_input)
+                except ValueError:
+                    print("Quantidade inválida! Deve ser um número.")
+                    continue
+            
+            dao.inserir(planeta, recurso, quantidade)
+
+        elif opcao == "2":
+            planeta = input("Nome do Planeta: ")
+            recurso = input("Nome do Recurso: ")
+            quantidade_input = input("Nova Quantidade (opcional): ") or None
+            
+            quantidade = None
+            if quantidade_input is not None:
+                try:
+                    quantidade = float(quantidade_input)
+                except ValueError:
+                    print("Quantidade inválida! Deve ser um número.")
+                    continue
+            
+            dao.atualizar(planeta, recurso, quantidade)
+
+        elif opcao == "3":
+            print("\n--- Recursos em Planetas Registrados ---")
+            recursos = dao.listar()
+            if recursos:
+                planeta = input("Nome do Planeta: ")
+                recurso = input("Nome do Recurso: ")
+                dao.deletar(planeta, recurso)
+            else:
+                print("Nenhum recurso em planeta registrado para deletar.")
+
+        elif opcao == "4":
+            dao.listar()
+
+        elif opcao == "0":
+            break
+        else:
+            print("Opção inválida!")
+
 def menu_consultas(dao):
     while True:
         print("\n--- MENU DE CONSULTAS ---")
@@ -83,7 +214,6 @@ def menu_consultas(dao):
         else:
             print("Opção inválida!")
 
-# Menu de Consultas sem Tabelas Intermediárias
 def menu_consultas_sem_intermediarias(dao):
     while True:
         print("\n--- CONSULTAS SEM TABELAS INTERMEDIÁRIAS ---")
@@ -112,12 +242,11 @@ def menu_consultas_sem_intermediarias(dao):
         else:
             print("Opção inválida!")
 
-# Menu de Consultas com Tabelas Intermediárias
 def menu_consultas_com_intermediarias(dao):
     while True:
         print("\n--- CONSULTAS COM TABELAS INTERMEDIÁRIAS ---")
         print("1 - Missões com Pilotos e Naves")
-        print("2 - Recursos em Planetas Inóspitos")  # Nome ajustado
+        print("2 - Recursos em Planetas Inóspitos")
         print("3 - Missões, Planetas e Recursos")
         print("0 - Voltar")
         
@@ -141,7 +270,6 @@ def menu_consultas_com_intermediarias(dao):
         else:
             print("Opção inválida!")
 
-# Menu Nave
 def menu_nave(dao):
     while True:
         print("\n--- Menu Nave ---")
@@ -224,7 +352,6 @@ def menu_nave(dao):
         else:
             print("Opção inválida!")
 
-# Menu Piloto
 def menu_piloto(dao):
     while True:
         print("\n--- Menu Piloto ---")
@@ -307,7 +434,6 @@ def menu_piloto(dao):
         else:
             print("Opção inválida!")
 
-# Menu Missão
 def menu_missao(dao):
     while True:
         print("\n--- Menu Missão ---")
@@ -380,7 +506,6 @@ def menu_missao(dao):
         else:
             print("Opção inválida!")
 
-# Menu Planeta
 def menu_planeta(dao):
     while True:
         print("\n--- Menu Planeta ---")
@@ -447,7 +572,6 @@ def menu_planeta(dao):
         else:
             print("Opção inválida!")
 
-# Menu Recurso
 def menu_recurso(dao):
     while True:
         print("\n--- Menu Recurso ---")

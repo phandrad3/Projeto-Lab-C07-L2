@@ -6,7 +6,6 @@ class NaveDAO:
         pass
     
     def inserir(self, nome, capacidade, velocidadeMaxima):
-        """Insere uma nova nave na tabela 'Nave'."""
         conn = get_connection()
         if conn is None:
             return False
@@ -28,7 +27,6 @@ class NaveDAO:
             close_connection(conn, cursor)
     
     def atualizar(self, idNave, nome=None, capacidade=None, velocidadeMaxima=None):
-        """Atualiza dados de uma nave específica pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -72,7 +70,6 @@ class NaveDAO:
             close_connection(conn, cursor)
     
     def deletar(self, idNave):
-        """Deleta uma nave específica pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -98,7 +95,6 @@ class NaveDAO:
             close_connection(conn, cursor)
     
     def listar(self):
-        """Lista todas as naves do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
@@ -122,23 +118,3 @@ class NaveDAO:
             return []
         finally:
             close_connection(conn, cursor)
-
-if __name__ == '__main__':
-    # Teste da classe
-    dao = NaveDAO()
-    
-    # INSERT
-    dao.inserir("Nave Teste", 100.0, 5000.0)
-    
-    # SELECT ALL
-    naves = dao.listar()
-    
-    if naves:
-        # UPDATE
-        dao.atualizar(naves[0][0], capacidade=150.0)
-        
-        # DELETE
-        dao.deletar(naves[0][0])
-    
-    # SELECT ALL FINAL
-    dao.listar()

@@ -6,7 +6,6 @@ class ConsultaDAO:
         pass
     
     def pilotos_com_naves(self):
-        """Lista pilotos com suas naves"""
         conn = get_connection()
         if conn is None:
             return []
@@ -36,7 +35,6 @@ class ConsultaDAO:
             close_connection(conn, cursor)
 
     def missoes_com_pilotos(self):
-        """Lista missões com seus pilotos"""
         conn = get_connection()
         if conn is None:
             return []
@@ -66,7 +64,6 @@ class ConsultaDAO:
             close_connection(conn, cursor)
 
     def missoes_realizadas(self):
-        """Lista missões realizadas em planetas"""
         conn = get_connection()
         if conn is None:
             return []
@@ -97,7 +94,6 @@ class ConsultaDAO:
             close_connection(conn, cursor)
 
     def missao_piloto_nave(self):
-        """Lista missões com pilotos e naves"""
         conn = get_connection()
         if conn is None:
             return []
@@ -128,7 +124,6 @@ class ConsultaDAO:
             close_connection(conn, cursor)
 
     def recursos_planetas_inospitos(self):
-        """Recursos em planetas inóspitos"""
         conn = get_connection()
         if conn is None:
             return []
@@ -203,14 +198,3 @@ class ConsultaDAO:
             return []
         finally:
             close_connection(conn, cursor)
-
-if __name__ == '__main__':
-    dao = ConsultaDAO()
-    
-    dao.pilotos_com_naves()
-    dao.missoes_com_pilotos()
-    dao.missoes_realizadas()
-    
-    dao.missao_piloto_nave()
-    dao.recursos_planetas()
-    dao.missoes_planetas_recursos()

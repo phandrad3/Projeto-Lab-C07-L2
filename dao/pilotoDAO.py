@@ -6,7 +6,6 @@ class PilotoDAO:
         pass
     
     def inserir(self, nome, nivel, Nave_idNave):
-        """Insere um novo piloto na tabela 'Piloto'."""
         conn = get_connection()
         if conn is None:
             return False
@@ -28,7 +27,6 @@ class PilotoDAO:
             close_connection(conn, cursor)
     
     def atualizar(self, idPiloto, nome=None, nivel=None, Nave_idNave=None):
-        """Atualiza dados de um piloto específico pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -72,7 +70,6 @@ class PilotoDAO:
             close_connection(conn, cursor)
     
     def deletar(self, idPiloto):
-        """Deleta um piloto específico pelo ID."""
         conn = get_connection()
         if conn is None:
             return False
@@ -98,7 +95,6 @@ class PilotoDAO:
             close_connection(conn, cursor)
     
     def listar(self):
-        """Lista todos os pilotos do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
@@ -122,23 +118,3 @@ class PilotoDAO:
             return []
         finally:
             close_connection(conn, cursor)
-
-if __name__ == '__main__':
-    # Teste da classe
-    dao = PilotoDAO()
-    
-    # INSERT
-    dao.inserir("Piloto Teste", 5, 1)
-    
-    # SELECT ALL
-    pilotos = dao.listar()
-    
-    if pilotos:
-        # UPDATE
-        dao.atualizar(pilotos[0][0], nivel=10)
-        
-        # DELETE
-        dao.deletar(pilotos[0][0])
-    
-    # SELECT ALL FINAL
-    dao.listar()

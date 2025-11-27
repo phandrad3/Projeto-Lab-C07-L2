@@ -6,7 +6,6 @@ class PlanetaDAO:
         pass
     
     def inserir(self, nomePlaneta, tipo, habitavel):
-        """Insere um novo planeta na tabela 'Planeta'."""
         conn = get_connection()
         if conn is None:
             return False
@@ -28,7 +27,6 @@ class PlanetaDAO:
             close_connection(conn, cursor)
     
     def atualizar(self, nomePlaneta, tipo=None, habitavel=None):
-        """Atualiza dados de um planeta específico pelo nome."""
         conn = get_connection()
         if conn is None:
             return False
@@ -69,7 +67,6 @@ class PlanetaDAO:
             close_connection(conn, cursor)
     
     def deletar(self, nomePlaneta):
-        """Deleta um planeta específico pelo nome."""
         conn = get_connection()
         if conn is None:
             return False
@@ -95,7 +92,6 @@ class PlanetaDAO:
             close_connection(conn, cursor)
     
     def listar(self):
-        """Lista todos os planetas do banco de dados."""
         conn = get_connection()
         if conn is None:
             return []
@@ -119,23 +115,3 @@ class PlanetaDAO:
             return []
         finally:
             close_connection(conn, cursor)
-
-if __name__ == '__main__':
-    # Teste da classe
-    dao = PlanetaDAO()
-    
-    # INSERT
-    dao.inserir("Planeta Teste", "Rochoso", 1)
-    
-    # SELECT ALL
-    planetas = dao.listar()
-    
-    if planetas:
-        # UPDATE
-        dao.atualizar(planetas[0][0], habitavel=0)
-        
-        # DELETE
-        dao.deletar(planetas[0][0])
-    
-    # SELECT ALL FINAL
-    dao.listar()
